@@ -13,11 +13,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/salesOrder.html'
         })
         .state('ProductsPage', {
-            url: '/products-page',
+            url: '/product',
             templateUrl: 'templates/ProductsPage.html'
         })
         .state('VendorsPage', {
-            url: '/vendors-page',
+            url: '/vendor',
             templateUrl: 'templates/VendorsPage.html'
         });
 });
@@ -47,6 +47,7 @@ app.controller('MainController', function($scope, $http, $state) {
     };
 
     $scope.processSpeech = function(speech) {
+        // Handle role creation
         var roleMatch = speech.match(/create new role for (\w+)(?: and description is (.*))/);
         if (roleMatch && roleMatch[1]) {
             var roleName = roleMatch[1];
@@ -57,29 +58,61 @@ app.controller('MainController', function($scope, $http, $state) {
                 description: roleDescription
             };
 
+            console.log('Payload:', payload);
+
             $http.post('http://127.0.0.1:8000/api/v1/users/role/', payload)
                 .then(function(response) {
                     console.log('Role created:', response.data);
                 }, function(error) {
                     console.log('Error creating role:', error);
                 });
-        } else {
+            return;
+        }
+
+        // Handle dynamic endpoint creation
+        var endpointMatch = speech.match(/create new ([\w\s]+) with name (.+)/);
+        if (endpointMatch && endpointMatch[1] && endpointMatch[2]) {
+            var endpoint = endpointMatch[1].replace(/\s+/g, '_');
+            var name = endpointMatch[2];
+
+            var payload = {
+                name: name
+            };
+
+            console.log('Payload:', payload);
+            console.log('Endpoint:', endpoint);
+
+            $http.post('http://127.0.0.1:8000/api/v1/' + endpoint + '/', payload)
+                .then(function(response) {
+                    console.log('Item created:', response.data);
+                }, function(error) {
+                    console.log('Error creating item:', error);
+                });
+            return;
+        }
+
+        // Handle navigation
+        var navigateMatch = speech.match(/go to (.+)/);
+        if (navigateMatch && navigateMatch[1]) {
+            var page = navigateMatch[1].replace(/\s+/g, '').toLowerCase();
+
             var pages = {
-                'sales order': 'salesOrder',
+                'salesorder': 'salesOrder',
                 'product': 'ProductsPage',
                 'vendor': 'VendorsPage',
                 'home': 'home'
             };
 
-            var page = Object.keys(pages).find(page => speech.includes('go to ' + page + '.'));
-
-            if (page) {
+            if (pages[page]) {
                 var stateName = pages[page];
                 console.log('Navigating to:', stateName);
                 $state.go(stateName);
             } else {
-                console.log('Speech not recognized for role creation or navigation');
+                console.log('Page not recognized:', page);
             }
+            return;
         }
+
+        console.log('Speech not recognized for any action');
     };
 });
