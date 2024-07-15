@@ -1,3 +1,4 @@
+
 var app = angular.module('myApp', ['ui.router']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
@@ -46,9 +47,12 @@ app.controller('MainController', function($scope, $http, $state) {
         };
     };
 
-    $scope.processSpeech = function(speech) {
+    $scope.processSpeech = function(speech) 
+    {
+        // Handle role creation
         var roleMatch = speech.match(/create new role for (\w+)(?: and description is (.*))/);
-        if (roleMatch && roleMatch[1]) {
+        if (roleMatch && roleMatch[1]) 
+        {
             var roleName = roleMatch[1];
             var roleDescription = roleMatch[2] || '';
 
@@ -63,15 +67,41 @@ app.controller('MainController', function($scope, $http, $state) {
                 }, function(error) {
                     console.log('Error creating role:', error);
                 });
-        } else {
+        } 
+        else 
+        {
+            // Handle dynamic endpoint creation for sale types
+            var saleTypeMatch = speech.match(/create new ([\w\s]+) with name (.+)/);
+            if (saleTypeMatch && saleTypeMatch[1] && saleTypeMatch[2]) {
+                var endpoint = saleTypeMatch[1].replace(/\s+/g, '_');
+                var name = saleTypeMatch[2];
+
+                var payload = {
+                    name: name
+                };
+
+                console.log('Payload:', payload);
+                console.log('Endpoint:', endpoint);
+
+                $http.post('http://127.0.0.1:8000/api/v1/masters/' + endpoint + '/', payload)
+                    .then(function(response) {
+                        console.log('Item created:', response.data);
+                    }, function(error) {
+                        console.log('Error creating item:', error);
+                    });
+                return;
+            }
+
+            // Handle navigation
             var pages = {
                 'sales order': 'salesOrder',
                 'product': 'ProductsPage',
                 'vendor': 'VendorsPage',
                 'home': 'home'
             };
-
-            var page = Object.keys(pages).find(page => speech.includes('go to ' + page + '.'));
+            console.log("above navigation part")
+            var page = Object.keys(pages).find(page => speech.includes('go to ' + page));
+            console.log("below navigation part : ==", page)
 
             if (page) {
                 var stateName = pages[page];
