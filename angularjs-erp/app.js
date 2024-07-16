@@ -142,21 +142,29 @@ app.controller('MainController', function ($scope, $http, $state) {
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
 
+        var recognitionTimeout;
         recognition.start();
 
         recognition.onresult = function (event) {
+            clearTimeout(recognitionTimeout);
             var speechResult = event.results[0][0].transcript.toLowerCase();
             console.log('Result received: ' + speechResult);
             $scope.processSpeech(speechResult);
         };
 
         recognition.onerror = function (event) {
+            clearTimeout(recognitionTimeout);
             console.log('Speech recognition error detected: ' + event.error);
         };
 
         recognition.onend = function () {
+            clearTimeout(recognitionTimeout);
             console.log('Speech recognition service disconnected');
         };
+
+        recognitionTimeout = setTimeout(function () {
+            recognition.stop();
+        }, 30000); // Stops recognition after 50 seconds
     };
 
     // Function to process the speech input
