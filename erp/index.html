@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJS ERP</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.29/angular-ui-router.min.js"></script>
+    <script src="app.js"></script>
+</head>
+<body ng-controller="MainController">
+    <nav>
+        <a ui-sref="home">Home</a>
+        <a ui-sref="salesOrder">Sales Order</a>
+        <a ui-sref="ProductsPage">Product</a>
+        <a ui-sref="VendorsPage">Vendor</a>
+    </nav>
+    <div ui-view></div>
+</body>
+</html>
