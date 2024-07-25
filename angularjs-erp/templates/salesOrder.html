@@ -1,7 +1,135 @@
-<div>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <h1>Sales Order Page</h1>
-    <p>Some dummy information about sales orders.</p>
+<!-- templates/salesOrder.html -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #666666;
+        color: white;
+    }
+    form {
+        background-color: #000000;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    form div {
+        margin-bottom: 15px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #007BFF;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        button[type="submit"],
+        button[ng-click="recognizeSpeech()"] {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover,
+        button[ng-click="recognizeSpeech()"]:hover {
+            background-color: #0056b3;
+        }
+        button[ng-click="recognizeSpeech()"] {
+            background-color: #28a745;
+            margin-left: 10px;
+        }
+        .fa-microphone {
+            font-size: 24px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+</style>
+<div ng-controller="SalesOrderController"> 
     <button ng-click="recognizeSpeech()"><i class="fa fa-microphone" style="font-size:48px;color:red"></i></button>
+    <form ng-submit="submitForm()">
+        <div>
+            <label for="title">Title:</label>
+            <input type="radio" ng-model="formData.title" value="mr"> Mr.
+            <input type="radio" ng-model="formData.title" value="mrs"> Mrs.
+        </div>
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" ng-model="formData.name" placeholder="say 'name is john'">
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" ng-model="formData.email" placeholder="say 'Email is john@example.com'">
+        </div>
+        <div>
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" ng-model="formData.phone_number" placeholder="say 'Phone Number is + country_code 123454321'">
+        </div>
+        <div>
+            <label for="gender">Gender:</label>
+            <input type="radio" ng-model="formData.gender" value="male"> Male
+            <input type="radio" ng-model="formData.gender" value="female"> Female
+        </div>
+        <div>
+            <label for="delivery_date">Delivery Date:</label>
+            <input type="text" id="delivery_date" ng-model="formData.delivery_date" placeholder="say 'Delivery Date is 20 june 2022'">
+        </div>
+        <div>
+            <label for="order_date">Order Date:</label>
+            <input type="text" id="order_date" ng-model="formData.order_date" placeholder="say 'Order Date is 15 june 2022'">
+        </div>
+        <div>
+            <label for="tax">Tax:</label>
+            <select id="tax" ng-model="formData.tax" >
+                <option value="20%">20%</option>
+                <option value="40%">40%</option>
+                <option value="60%">60%</option>
+                <option value="80%">80%</option>
+            </select>
+        </div>
+        <div>
+            <label for="remarks">Remarks:</label>
+            <textarea id="remarks" ng-model="formData.remarks" placeholder="say 'Remarks is Good'"></textarea>
+        </div>
+        <div>
+            <label for="time">Time:</label>
+            <input type="text" id="time" ng-model="formData.time" placeholder="say 'Time is 12 45 am'">
+        </div>
+        <div>
+            <label for="mobile">Mobile:</label>
+            <input type="checkbox" ng-model="formData.moto"> moto
+            <input type="checkbox" ng-model="formData.iphone"> iphone
+        </div>
+        <button type="submit">Submit</button>
+    </form>
 </div>
+
